@@ -6,18 +6,20 @@ import java.util.Scanner;
 
 public class launchClass {
 	private static ArrayList<String> all = new ArrayList<String>();
-	private static ArrayList<String> english ;
+	private static ArrayList<String> english;
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String input = read();
-		System.out.println();
-		System.out.println("Desired Text Entry:" + "\n" + input);
+		read();
+		System.out.println("[SYSTEM MSG] THIS IS WHAT YOU PLAN TO TRANSLATE: ");
+		printArray(all);
 		english = formatArray();
-		combined();
+		printOut();
 	}
-	private static void combined() {
-		System.out.println("FINALIZED TEXT _____________________");
-		for(int index =0; index<all.size();index++) {
+
+	private static void printOut() {
+		System.out.println("[SYSTEM MSG] FINALIZED TEXT _____________________");
+		for (int index = 0; index < all.size(); index++) {
 			System.out.println(all.get(index));
 			System.out.println(english.get(index));
 		}
@@ -25,16 +27,16 @@ public class launchClass {
 	}
 
 	private static ArrayList<String> formatArray() {
-		System.out.println("BEGINNING TO TRANSLATE");
+		System.out.println("[SYSTEM MSG] BEGINNING TO TRANSLATE");
 		ArrayList<String> english = new ArrayList<String>();
-		for(int index = 0; index<all.size();index++) {
+		for (int index = 0; index < all.size(); index++) {
 			String trans = all.get(index);
-			System.out.println("Input for translate" +trans);
+			System.out.println("[SYSTEM PROCESSING]: Input for translate: " + trans);
 			String combined = "";
-			for(int i =0;i<trans.length();i++) {
-				String input = trans.substring(i,i+1);
+			for (int i = 0; i < trans.length(); i++) {
+				String input = trans.substring(i, i + 1);
 				try {
-					combined = combined + "["+GoogleTranslator.translate("zh","en",input)+"]";
+					combined = combined + "[" + GoogleTranslator.translate("zh", "en", input) + "]";
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -45,35 +47,41 @@ public class launchClass {
 		return english;
 	}
 
-	private static String read() {
-		System.out.println("READING FILE");
-		int counter = 0;
+	private static void read() {
+		System.out.println("[SYSTEM MSG]\t INPUT DESIRED TEXT FOR CHINESE TO ENGLISH INDIVIDUAL CHARACTER TRANSLATION");
 		Scanner in = new Scanner(System.in);
-		while (in.hasNext() && counter < 15) {
-			String input = in.next();
+		while (in.hasNextLine()) {
+			String input = in.nextLine();
+			if (input == null || input.isEmpty()) {
+				break;
+			}
 			all.add(input);
-			System.out.println("Value "+counter+ " input " +input);
-			counter++;
 		}
+		System.out.println("[SYSTEM MSG] TEXT FINISHED READING");
 		in.close();
-		printArray(all);
+		ifFormat();
+	}
+	private static void ifFormat() {
+		boolean format = false;
+		for(String currentIndex: all) {
+			if(currentIndex.length()>10) {
+				format = true;
+				System.out.println("[SYSTEM MSG] YOUR TEXT WILL BE FORMATTED FOR READABILTY");
+				break;
+			}
+		}
+	}
+	
 
-		return combine(all);
+	private static String trimWhiteSpace(String input) {
+		input = input.replaceAll("\\s+", "");
+		return input;
 	}
 
 	private static void printArray(ArrayList<String> input) {
-		System.out.println("Array Ouput");
 		for (String currentIndex : input) {
 			System.out.println(currentIndex);
 		}
-	}
-
-	private static String combine(ArrayList<String> input) {
-		String combined = "";
-		for (String currentIndex : input) {
-			combined = combined + currentIndex;
-		}
-		return combined;
 	}
 
 }
