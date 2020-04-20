@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class launchClass {
 	private static ArrayList<String> all = new ArrayList<String>();
 	private static ArrayList<String> english;
+	private static ArrayList<String> dividedUp = new ArrayList<String>();
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -31,7 +32,8 @@ public class launchClass {
 		ArrayList<String> english = new ArrayList<String>();
 		for (int index = 0; index < all.size(); index++) {
 			String trans = all.get(index);
-			System.out.println("[SYSTEM PROCESSING]: Input for translate: " + trans);
+			System.out.println("[SYSTEM PROCESSING]: Progress " + (double) (index * 100 / all.size())
+					+ "%\tTranslate Input: " + trans);
 			String combined = "";
 			for (int i = 0; i < trans.length(); i++) {
 				String input = trans.substring(i, i + 1);
@@ -61,17 +63,39 @@ public class launchClass {
 		in.close();
 		ifFormat();
 	}
+
 	private static void ifFormat() {
 		boolean format = false;
-		for(String currentIndex: all) {
-			if(currentIndex.length()>10) {
+		for (String currentIndex : all) {
+			if (currentIndex.length() > 10) {
 				format = true;
 				System.out.println("[SYSTEM MSG] YOUR TEXT WILL BE FORMATTED FOR READABILTY");
+				formatter();
 				break;
 			}
 		}
 	}
-	
+
+	private static void formatter() {
+		String combined = "";
+		for (String currentString : all) {
+			combined = combined + currentString;
+		}
+		combined = trimWhiteSpace(combined);
+		// System.out.println("[DEBUG MSG] Combined String length" + combined.length() +
+		// "\t" + combined);
+		String alpha;
+		for (int i = 0; i < combined.length() / 10 + 1; i++) {
+			if (combined.length() - 10 * i < 10) {
+				alpha = combined.substring(i * 10);
+			} else {
+				alpha = (combined.substring(i * 10, (i + 1) * 10));
+				System.out.println("[DEBUG MSG] SEQUENCE" + i + " TEXT " + alpha);
+			}
+			dividedUp.add(alpha);
+		}
+		all = (ArrayList<String>) dividedUp.clone();
+	}
 
 	private static String trimWhiteSpace(String input) {
 		input = input.replaceAll("\\s+", "");
